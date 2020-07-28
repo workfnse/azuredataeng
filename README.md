@@ -4,6 +4,11 @@ DP-200
 DP-201
 
 ### Synapse Analytics
+
+**ELT**: Extract, Load (in parallel) and Transform (using many nodes)
+
+(as opposed to ETL in Databricks -- that is traditional ETL)
+
 Cheatsheet: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/cheat-sheet
 
 Table overview: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-overview
@@ -24,6 +29,33 @@ In 99 percent of cases, the partition key should be based on date.
  - When creating partitions on clustered columnstore tables, it is important to consider how many rows belong to each partition. For optimal compression and performance of clustered columnstore tables, a minimum of 1 million rows per distribution and partition is needed. Before partitions are created, Synapse SQL pool already divides each table into 60 distributed databases.
 https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-partition
 
+**Units**: Increase DWU for better performance.
+ - `DWU` = CPU + Memory + IO.
+ - Storage: Costs are separate.
+ - `PAUSE` option available.
+ 
+**Optimization**
+ - Result-set cache: repetitive queries with infrequent data changes are stored in a cache.
+ - Workload groups: Prioritize some requests over others, limit resources for unimportant requests.
+
+**Architecture**: Control node + 60 compute nodes.
+
+**Polybase**:
+1. Extract files into txt/csv.
+2. Load into BLOB or Data Lake Gen2.
+3. Prepare data for loading.
+4. Import data into temp/staging table (round-robin distribution) in Synapse Analytics.
+5. Transform.
+6. Insert into production tables.
+
+More fine grained:
+ - Create MASTER key.
+ - Create scoped credential.
+ - External Data Source.
+ - External File Format (SCHEMA).
+ - External Table (view only -- stays in memory, not on disk)
+ - Table (physical disk) using `CTAS` = Create Table as Select.
+
 ### Security
 
 **Best practices**:
@@ -35,6 +67,9 @@ https://docs.microsoft.com/en-us/azure/azure-sql/database/security-best-practice
 https://www.youtube.com/watch?v=mntOLLNejUo
 
 **SQL/Synapse Analytics**
+ - **Advanced Data Security**: Discovering, classifying, and labeling columns that contain sensitive data in your database. Sensitive Data dashboard.
+https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview
+ - Auditing: enable database auditing.
  - Column-level encryption in Synapse/SQL is non-deterministic; no option of deterministic? LINK?
  - Master key (SQL) is required for column encryption/decryption tasks.
  - [Always Encrypted](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine?view=sql-server-2017) supports two types of encryption: randomized (more secure) and deterministic (querying/joins).
