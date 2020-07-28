@@ -66,6 +66,17 @@ https://docs.microsoft.com/en-us/azure/azure-sql/database/security-best-practice
 
 https://www.youtube.com/watch?v=mntOLLNejUo
 
+**Access/Authorization**
+
+Data Lake Gen2
+https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-control
+ - RBAC (Role Based Access Control; defined in Active Directory)
+ - Access Control Lists (file/directory; available in Data Lake Gen2, not in BLOB): 
+**Read**=4, **Write**=2, **Execute**=1
+ - Shared Key/Shared Access Signatures: Full access including ability to modify ACLs.
+
+**BLOB**: https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations
+
 **SQL/Synapse Analytics**
  - **Advanced Data Security**: Discovering, classifying, and labeling columns that contain sensitive data in your database. Sensitive Data dashboard.
 https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview
