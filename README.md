@@ -19,9 +19,13 @@ Kinds of tables: Clustered index, Clustered columnstore (default), Heap
  - A heap table can be especially useful for loading transient data, such as a staging table which is transformed into a final table.
 
 **Distributions**
- - Replicated: <2 GB, usually DIM tables
- - Hash: Best query performance for large tables 
- - Round Robin: Evenly distributed + ideal for staging tables
+ - Replicated: <2 GB, usually dimension tables
+ - Hash: 
+   - Large tables: Best query performance
+   - Small tables/Dimension tables with a common hash key to a fact table with frequent join operations can be hash distributed.
+ - Round Robin: Evenly distributed 
+   - ideal for staging tables
+   - tables (both large/small) with NO JOINS
 
 **Partitioning**
 In 99 percent of cases, the partition key should be based on date.
