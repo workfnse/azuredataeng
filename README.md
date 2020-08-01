@@ -1,7 +1,51 @@
-
+ 
 Azure data engineering
 DP-200
 DP-201
+
+### Cosmos DB
+
+Two main problems with Cosmos DB: 
+ - Expensive
+ - Can handle mostly **simple queries**
+
+Everythin is stored as ARS = Atomic Record Sequence.
+
+| API | Database | Containers | Items |
+|---|---|---|---|
+| SQL API | Database | Container | Document  |
+| MongoDB API | Database | Collection | Document |
+| Gremlin API | Database | Graph | Node/Edge |
+| Table API |  | Table | Item |
+| Cassandra API | Keyspace | Table | Row |
+
+**Partition key**: Defined at provision time -- cannot be changed later
+General principles:
+ - High cardinality (**WRITE** optimized, example: vehicalid + date; extreme cardinality bad for READ operations)
+ - Evenly distribute requests (avoid data skewness)
+ - Evenly distribute storage (20 GB max)
+ - For **READ** operations, find a partition key that is even and does not have high cardinality.
+
+
+**Time To Live**: https://docs.microsoft.com/en-us/azure/cosmos-db/time-to-live
+ - Container: null
+   - Item: null, -1, n (seconds) -- item will never expire (default)
+ - Container: -1
+   - Item: 
+     - null or -1: item will never expire
+     - n (seconds): item will expire after n seconds
+ - Container: n
+   - Item:
+     - null: item will expire after n seconds (inherits from container)
+     - -1: item will never expire even though the container will expire after n seconds
+     - n' seconds: item will expire after n' seconds
+
+**RUs**: Request Units depend on size, query size, indexing, properties, indexed properties, consistency level (strong ~ 2 * eventual for read operations)
+
+Higher than provisioned RU ==> rate-limited. Azure CLI: `--throughput`
+
+
+
 
 ### Synapse Analytics
 
