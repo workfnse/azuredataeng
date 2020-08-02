@@ -69,11 +69,11 @@ Everythin is stored as ARS = Atomic Record Sequence.
 
 ### Synapse Analytics
 
-**ELT**: Extract, Load (in parallel) and Transform (using many nodes)
-
-(as opposed to ETL in Databricks -- that is traditional ETL)
 [Best practices](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-best-practices), [Cheatsheet](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/cheat-sheet), [SQL Tables overview](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-overview)
+
 (including the use of CTAS, create external table just creates a table in the memory without actually copying it anywhere)
+
+**ELT**: Extract, Load (in parallel) and Transform (using many nodes) as opposed to ETL in Databricks -- that is traditional ETL
 
 Kinds of tables: Clustered index, Clustered columnstore (default), Heap
  - By default, SQL pool stores a table as a clustered columnstore index. This form of data storage achieves high data compression and query performance on large tables.
@@ -133,7 +133,7 @@ https://www.youtube.com/watch?v=mntOLLNejUo
 
 **Access/Authorization**
 
-Data Lake Gen2
+**Data Lake Gen2**
 https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-control
  - RBAC (Role Based Access Control; defined in Active Directory)
  - Access Control Lists (file/directory; available in Data Lake Gen2, not in BLOB): 
@@ -160,3 +160,7 @@ https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-cla
  - [Dynamic Management Views](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-monitor) can be used to monitor Azure **Synapse Analytics**. In particular, `sys.dm_pdw_exec_sessions` stores login information for the last 10k logins. `sys.dm_pdw_exec_requests` logs the last 10k requests (their elapsed time and such).
  - Push notifications send alerts to Azure **mobile** app.
  - Azure [IT Service Management connector](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/itsmc-connections) allows you to connect Azure to non-Azure services. supports: *Cherwell, Provance, ServiceNow, System Center Service Manager*. It can be used in a bi-directional way to exchange information between Azure Monitor/Log Analytics and an external service.
+ 
+ **Log queries/analytics**
+ - Starting January 11,2019, creating or modifying log alert rules that use `search`, or `union` operators will **not** be supported the in Azure portal. 
+ - [Log alerts](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/alerts-log): KQL queries for alerts should not contain a **time filter**. Time filters are set by `period` in the alert setup.
