@@ -3,6 +3,26 @@ Azure data engineering
 DP-200
 DP-201
 
+### Azure Data Lake Gen2
+[Overview](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction), 
+[Best Practices](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-best-practices), 
+[Summary - 3rd party](https://www.blue-granite.com/blog/10-things-to-know-about-azure-data-lake-storage-gen2)
+ - Multi-modal (file system, BLOB)
+ - Increased granularity for security (POSIX/Access Control List), data engineering and science (databricks).
+ - Renaming/delete operations much faster as opposed to wasb-BLOB.
+ - `abfs[s]://[container].dfs.core.windows.net/` (ADLS Gen2) vs `wasb[s]://[container].blob.core.windows.net/` (BLOB storage)
+ - Container -> Directory -> File as opposed to BLOB storage: Container -> Virtual Directory -> blob.
+ 
+ [**Optimization**](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-performance-tuning-guidance)
+ - Large files are better than small files: `256MB to 100GB`
+ - Folder organization: time series/streaming: `\DataSet\YYYY\MM\DD\HH\mm\datafile_YYYY_MM_DD_HH_mm.tsv`.
+ Keeping the smallest unit on the right end makes sure that the analytics engine/reading service only has to read a fraction of the data instead of reading entire folders.
+ - Read-Write operations with `4MB-16MB` size.
+ 
+ **Tiers**: Hot (frequent access, ex: daily), Cool (infrequent access, ex: monthly), Archive (rare access, ex: yearly)
+ 
+ **Costs**: Storage cost the same as BLOB storage BUT **transaction** cost is higher.
+
 ### Cosmos DB
 
 Two main problems with Cosmos DB: 
@@ -20,10 +40,9 @@ Everythin is stored as ARS = Atomic Record Sequence.
 | Cassandra API | Keyspace | Table | Row |
 
 **Partition key**: Defined at provision time -- cannot be changed later
-General principles:
  - High cardinality (**WRITE** optimized, example: vehicalid + date; extreme cardinality bad for READ operations)
  - Evenly distribute requests (avoid data skewness)
- - Evenly distribute storage (20 GB max)
+ - Evenly distribute storage (20 GB max). That is, avoid **hot partition** problem.
  - For **READ** operations, find a partition key that is even and does not have high cardinality.
 
 
@@ -40,9 +59,10 @@ General principles:
      - -1: item will never expire even though the container will expire after n seconds
      - n' seconds: item will expire after n' seconds
 
-**RUs**: Request Units depend on size, query size, indexing, properties, indexed properties, consistency level (strong ~ 2 * eventual for read operations)
-
-Higher than provisioned RU ==> rate-limited. Azure CLI: `--throughput`
+**RU**: Throughput cost = CPU + I/O + Memory
+ - Request Units **per second** depend on size, query size, indexing, properties, indexed properties, consistency level (strong ~ 2 * eventual for read operations)
+ - Storage costs are separate
+ - Higher than provisioned RU ==> rate-limited. Azure CLI: `--throughput`
 
 
 
@@ -52,10 +72,7 @@ Higher than provisioned RU ==> rate-limited. Azure CLI: `--throughput`
 **ELT**: Extract, Load (in parallel) and Transform (using many nodes)
 
 (as opposed to ETL in Databricks -- that is traditional ETL)
-
-Cheatsheet: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/cheat-sheet
-
-Table overview: https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-overview
+[Best practices](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-best-practices), [Cheatsheet](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/cheat-sheet), [SQL Tables overview](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-overview)
 (including the use of CTAS, create external table just creates a table in the memory without actually copying it anywhere)
 
 Kinds of tables: Clustered index, Clustered columnstore (default), Heap
@@ -72,7 +89,7 @@ Kinds of tables: Clustered index, Clustered columnstore (default), Heap
    - tables (both large/small) with NO JOINS
 
 **Partitioning**
-In 99 percent of cases, the partition key should be based on date.
+In 99 percent of cases, the partition key should be based on `date`.
  - Only empty partitions can be split in when a columnstore index exists on the table. Consider disabling the columnstore index before issuing the ALTER PARTITION statement, then rebuilding the columnstore index after ALTER PARTITION is complete.
  - When creating partitions on clustered columnstore tables, it is important to consider how many rows belong to each partition. For optimal compression and performance of clustered columnstore tables, a minimum of 1 million rows per distribution and partition is needed. Before partitions are created, Synapse SQL pool already divides each table into 60 distributed databases.
 https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-partition
@@ -129,13 +146,14 @@ https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-co
  - **Advanced Data Security**: Discovering, classifying, and labeling columns that contain sensitive data in your database. Sensitive Data dashboard.
 https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview
  - Auditing: enable database auditing.
- - Column-level encryption in Synapse/SQL is non-deterministic; no option of deterministic? LINK?
+ - [Row Level Security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) using predicates/functions for read-only access or other kinds.
  - Master key (SQL) is required for column encryption/decryption tasks.
- - [Always Encrypted](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine?view=sql-server-2017) supports two types of encryption: randomized (more secure) and deterministic (querying/joins).
+ - [Always Encrypted](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine?view=sql-server-2017) supports two types of encryption: randomized (more secure) and deterministic (querying/joins). It does **column-level** encryption.
  - [Row level security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) (`CREATE SECURITY POLICY` - T-SQL) encrypts the WHOLE row; not useful where only one column like address has to be masked.
 
 **Databricks**: https://docs.microsoft.com/en-us/learn/modules/describe-platform-architecture-security-data-protection-azure-databricks/
 
+**Private peering/VNets/ExpressRoutes**: https://docs.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 
 ### Monitoring
 
