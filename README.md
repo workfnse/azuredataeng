@@ -180,9 +180,22 @@ https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-cla
 
 ### Monitoring
 
- - [Dynamic Management Views](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-monitor) can be used to monitor Azure **Synapse Analytics**. In particular, `sys.dm_pdw_exec_sessions` stores login information for the last 10k logins. `sys.dm_pdw_exec_requests` logs the last 10k requests (their elapsed time and such).
+**General**:
  - Push notifications send alerts to Azure **mobile** app.
  - Azure [IT Service Management connector](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/itsmc-connections) allows you to connect Azure to non-Azure services. supports: *Cherwell, Provance, ServiceNow, System Center Service Manager*. It can be used in a bi-directional way to exchange information between Azure Monitor/Log Analytics and an external service.
+
+**Synapse Analytics**:
+ - [Dynamic Management Views](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-manage-monitor): `sys.dm_pdw_exec_sessions` stores login information for the last 10k logins. `sys.dm_pdw_exec_requests` logs the last 10k requests (their elapsed time and such).
+ - [Auditing](https://docs.microsoft.com/en-us/azure/azure-sql/database/auditing-overview)
+   - Outputs: Log Analytics, Event Hubs, Storage account (append blobs; **retention days** with default 0 = infinite)
+   - Server-level (recommended) and database-level.
+   - "will audit **all the queries and stored procedures executed against the database, as well as successful and failed logins**: BATCH_COMPLETED_GROUP, SUCCESSFUL_DATABASE_AUTHENTICATION_GROUP, FAILED_DATABASE_AUTHENTICATION_GROUP."
+   - **Active Directory** logins: *... failed logins records will not appear in the SQL audit log. To view failed login audit records, you need to visit the Azure Active Directory portal, which logs details of these events.*
+   - Log Analytics: `SQLSecurityAuditEvents` contains audit logs.
+
+
+ 
+ 
  
  **Log queries/analytics**
  - Starting January 11,2019, creating or modifying log alert rules that use `search`, or `union` operators will **not** be supported the in Azure portal. 
