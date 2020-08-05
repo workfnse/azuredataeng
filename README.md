@@ -4,18 +4,27 @@ DP-200
 DP-201
 
 
-| Key | Datastore | Use case | Levels |
+| Datastore/unit | Key | Use case | Comments |
 |---|---|---|---|
-| Role Based Access Control (Active Directory) | All resources | All kinds of roles | Expires, needs to be renewed periodically |
+| All resources | Role Based Access Control<sup>1</sup> (Active Directory) | All kinds of roles | Higher level usually + Expires, needs to be renewed periodically |
 |   |   |   |   |
 | Azure Storage (BLOB, ...) | Shared Access Signatures | 3rd party app/Restricted access | account, resource, container, ... |
 | | Access Key/Shared Key | Admin/Full access |  |
+| Data Lake Gen2<sup>2</sup> | Access Control List | Granular/Restricted access | Directory, file, ... |
 | Cosmos DB | Resource Token | 3rd party app/Restricted access |  |
 | | Master Key | Admin/Full access |  |
-| Data Lake Gen2 | Access Control List | Granular/Restricted access | Directory, file, ... |
 | Databricks | Access Token | 3rd party/Restricted access | |
 
+1: RBAC vs ACL
+> While using Azure role assignments is a powerful mechanism to control access permissions, it is a very coarsely grained mechanism relative to ACLs. The smallest granularity for RBAC is at the container level and this will be evaluated at a higher priority than ACLs.
 
+2: Includes SAS + Shared Key of the Azure storage.
+> In the case of Shared Key, the caller effectively gains 'super-user' access, meaning full access to all operations on all resources, including setting owner and changing ACLs.
+Source (1+2): https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-control
+
+SAS is signed with RBAC-AD: https://docs.microsoft.com/en-gb/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli
+
+Connection string is for Access Key/Shared Key -- full access.
 
 ### Azure Data Lake Gen2
 [Overview](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction), 
@@ -161,10 +170,9 @@ https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-co
  - **Advanced Data Security**: Discovering, classifying, and labeling columns that contain sensitive data in your database. Sensitive Data dashboard.
 https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview
  - Auditing: enable database auditing.
- - [Row Level Security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) using predicates/functions for read-only access or other kinds.
  - Master key (SQL) is required for column encryption/decryption tasks.
  - [Always Encrypted](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine?view=sql-server-2017) supports two types of encryption: randomized (more secure) and deterministic (querying/joins). It does **column-level** encryption.
- - [Row level security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) (`CREATE SECURITY POLICY` - T-SQL) encrypts the WHOLE row; not useful where only one column like address has to be masked.
+ - [Row level security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) using predicates/functions for read-only access or other kinds. `CREATE SECURITY POLICY` (T-SQL) encrypts the WHOLE row; not useful where only one column like address has to be masked.
 
 **Databricks**: https://docs.microsoft.com/en-us/learn/modules/describe-platform-architecture-security-data-protection-azure-databricks/
 
@@ -179,3 +187,7 @@ https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-cla
  **Log queries/analytics**
  - Starting January 11,2019, creating or modifying log alert rules that use `search`, or `union` operators will **not** be supported the in Azure portal. 
  - [Log alerts](https://docs.microsoft.com/en-us/azure/azure-monitor/platform/alerts-log): KQL queries for alerts should not contain a **time filter**. Time filters are set by `period` in the alert setup.
+ 
+[**Databricks**](https://docs.microsoft.com/en-us/azure/architecture/databricks-monitoring/application-logs):
+ - `DropWizard`: Metrics to Azure Monitor.
+ - `log4j`: Logs to Log Analytics.
