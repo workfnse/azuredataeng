@@ -3,6 +3,19 @@ Azure data engineering
 DP-200
 DP-201
 
+
+| Key | Datastore | Use case | Levels |
+|---|---|---|---|
+| Role Based Access Control (Active Directory) | All resources | All kinds of roles | Expires, needs to be renewed periodically |
+|---|---|---|---|
+| Shared Access Signatures | Azure Storage (BLOB, ...) | 3rd party app/Restricted access | account, resource, container, ... |
+| Shared Key | Azure Storage (BLOB, ...) | Admin/Full access |  |
+| Resource Token | Cosmos DB | 3rd party app/Restricted access |  |
+| Master Key | Cosmos DB | Admin/Full access |  |
+| Access Control List | Data Lake Gen2 | Granular/Restricted access | Directory, file, ... |
+
+
+
 ### Azure Data Lake Gen2
 [Overview](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction), 
 [Best Practices](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-best-practices), 
@@ -29,7 +42,7 @@ Two main problems with Cosmos DB:
  - Expensive
  - Can handle mostly **simple queries**
 
-Everythin is stored as ARS = Atomic Record Sequence.
+Everything is stored as ARS = Atomic Record Sequence.
 
 | API | Database | Containers | Items |
 |---|---|---|---|
@@ -63,7 +76,7 @@ Everythin is stored as ARS = Atomic Record Sequence.
  - Request Units **per second** depend on size, query size, indexing, properties, indexed properties, consistency level (strong ~ 2 * eventual for read operations)
  - Storage costs are separate
  - Higher than provisioned RU ==> rate-limited. Azure CLI: `--throughput`
-
+ - **Total RU** count = total RUs consumed, useful for monitoring/optimizing.
 
 
 
@@ -135,10 +148,11 @@ https://www.youtube.com/watch?v=mntOLLNejUo
 
 **Data Lake Gen2**
 https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-control
- - RBAC (Role Based Access Control; defined in Active Directory)
+ - RBAC (Role Based Access Control; defined in **Active Directory**) Granular access BUT expires unless renewed.
  - Access Control Lists (file/directory; available in Data Lake Gen2, not in BLOB): 
 **Read**=4, **Write**=2, **Execute**=1
- - Shared Key/Shared Access Signatures: Full access including ability to modify ACLs.
+ - Shared Key/Access Key: Full access including ability to modify ACLs.
+ - [Shared Access Signatures](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview): Restricted access (3rd party APPs).
 
 **BLOB**: https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations
 
