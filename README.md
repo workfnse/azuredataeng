@@ -7,12 +7,13 @@ DP-201
 | Key | Datastore | Use case | Levels |
 |---|---|---|---|
 | Role Based Access Control (Active Directory) | All resources | All kinds of roles | Expires, needs to be renewed periodically |
-|---|---|---|---|
-| Shared Access Signatures | Azure Storage (BLOB, ...) | 3rd party app/Restricted access | account, resource, container, ... |
-| Shared Key | Azure Storage (BLOB, ...) | Admin/Full access |  |
-| Resource Token | Cosmos DB | 3rd party app/Restricted access |  |
-| Master Key | Cosmos DB | Admin/Full access |  |
-| Access Control List | Data Lake Gen2 | Granular/Restricted access | Directory, file, ... |
+|   |   |   |   |
+| Azure Storage (BLOB, ...) | Shared Access Signatures | 3rd party app/Restricted access | account, resource, container, ... |
+| | Access Key/Shared Key | Admin/Full access |  |
+| Cosmos DB | Resource Token | 3rd party app/Restricted access |  |
+| | Master Key | Admin/Full access |  |
+| Data Lake Gen2 | Access Control List | Granular/Restricted access | Directory, file, ... |
+| Databricks | Access Token | 3rd party/Restricted access | |
 
 
 
