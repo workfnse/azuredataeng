@@ -26,6 +26,16 @@ SAS is signed with RBAC-AD: https://docs.microsoft.com/en-gb/azure/storage/blobs
 
 Connection string is for Access Key/Shared Key -- full access.
 
+
+### Stream Analytics
+
+**Window functions**
+ - Count only once: `Session`, `Tumbling`.
+ - Non-overlapping: `Tumbling`, `Session`.
+ - Output only if event: `Session`, `Sliding`.
+ - Fixed size: `Tumbling`, `Hopping`, `Sliding` - only Session has a variable window size.
+
+
 ### Azure Data Lake Gen2
 [Overview](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction), 
 [Best Practices](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-best-practices), 
