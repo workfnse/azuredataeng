@@ -86,11 +86,11 @@ Everything is stored as ARS = Atomic Record Sequence.
    - Item: 
      - null or -1: item will never expire
      - n (seconds): item will expire after n seconds
- - Container: n
+ - Container: n1
    - Item:
-     - null: item will expire after n seconds (inherits from container)
-     - -1: item will never expire even though the container will expire after n seconds
-     - n' seconds: item will expire after n' seconds
+     - null: item will expire after n1 seconds (inherits from container)
+     - -1: item will never expire even though the container will expire after n1 seconds
+     - n2 seconds: item will expire after n2 seconds
 
 **RU**: Throughput cost = CPU + I/O + Memory
  - Request Units **per second** depend on size, query size, indexing, properties, indexed properties, consistency level (strong ~ 2 * eventual for read operations)
@@ -129,7 +129,7 @@ https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-
 
 **Units**: Increase DWU for better performance.
  - `DWU` = CPU + Memory + IO.
- - Storage: Costs are separate.
+ - Storage costs are separate.
  - `PAUSE` option available.
  
 **Optimization**
@@ -183,6 +183,16 @@ https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-cla
  - Master key (SQL) is required for column encryption/decryption tasks.
  - [Always Encrypted](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine?view=sql-server-2017) supports two types of encryption: randomized (more secure) and deterministic (querying/joins). It does **column-level** encryption.
  - [Row level security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) using predicates/functions for read-only access or other kinds. `CREATE SECURITY POLICY` (T-SQL) encrypts the WHOLE row; not useful where only one column like address has to be masked.
+ - [Transparent Data Encryption](https://docs.microsoft.com/en-us/azure/azure-sql/database/transparent-data-encryption-byok-configure?tabs=azure-cli) 
+
+All newly created databases in SQL Database are encrypted by default by using service-managed transparent data encryption. Existing SQL databases created before May 2017 and SQL databases created through restore, geo-replication, and database copy are not encrypted by default. Existing SQL Managed Instance databases created before February 2019 are not encrypted by default. 
+ 
+ Steps to configure custom key from Key Vault for TDE:
+   - Assign Azure AD identity to the SQL server.
+   - Grant Key Vault permissions to the SQL server.
+   - Add the Key Vault to the SQL server.
+   - Set the TDE protector/master key (at the server/instance level).
+   - Turn ON TDE.
 
 **Databricks**: https://docs.microsoft.com/en-us/learn/modules/describe-platform-architecture-security-data-protection-azure-databricks/
 
