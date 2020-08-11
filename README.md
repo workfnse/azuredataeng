@@ -30,12 +30,20 @@ Connection string is for Access Key/Shared Key -- full access.
 ## Stream Analytics
 
 **Window functions**
- - Count only once: `Session`, `Sliding`.
+ - Count only once: `Tumbling`, `Session`.
  - Non-overlapping: `Tumbling`, `Session`.
  - Output only if event: `Session`, `Sliding`.
- - Fixed size: `Tumbling`, `Hopping`, `Sliding` - only Session has a variable window size.
+ - Fixed size: `Tumbling`, `Hopping`, `Sliding` - only Session has a variable window size but has a MAX window size.
 
-
+**File formats**: 
+ - AVRO (binary with SCHEMA)
+ - CSV
+ - JSON
+ 
+**Event hubs vs IoT hubs**:
+IoT hubs support two options: edge (on device) vs cloud.
+ - Event hubs support: HTTPS, AMQP, **Apache Kafka**.
+ - IoT hubs support: HTTPS, AMQP, **MQTT**.
 
 
 ## Azure Data Lake Gen2
