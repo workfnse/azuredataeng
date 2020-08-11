@@ -30,9 +30,9 @@ Connection string is for Access Key/Shared Key -- full access.
 ## Stream Analytics
 
 **Window functions**
- - Count only once: `Tumbling`, `Session`.
- - Non-overlapping: `Tumbling`, `Session`.
  - Output only if event: `Session`, `Sliding`.
+ - Events counted only once: `Tumbling`, `Session`.
+ - Non-overlapping: `Tumbling`, `Session`.
  - Fixed size: `Tumbling`, `Hopping`, `Sliding` - only Session has a variable window size but has a MAX window size.
 
 **File formats**: 
@@ -44,6 +44,12 @@ Connection string is for Access Key/Shared Key -- full access.
 IoT hubs support two options: edge (on device) vs cloud.
  - Event hubs support: HTTPS, AMQP, **Apache Kafka**.
  - IoT hubs support: HTTPS, AMQP, **MQTT**.
+
+[**Partitioning**](https://docs.microsoft.com/en-us/azure/stream-analytics/stream-analytics-parallelization#calculate-the-maximum-streaming-units-of-a-job):
+
+All non-partitioned steps together can **scale up to six streaming units (SUs)** for a Stream Analytics job. In addition to this, you can add 6 SUs for each partition in a partitioned step. You can see some examples in the table below.
+
+Repartition: https://docs.microsoft.com/en-us/azure/stream-analytics/repartition
 
 
 ## Azure Data Lake Gen2
@@ -73,6 +79,15 @@ IoT hubs support two options: edge (on device) vs cloud.
 Two main problems with Cosmos DB: 
  - Expensive
  - Can handle mostly **simple queries**
+
+**Backup**: "Azure Cosmos DB automatically takes a backup of your **database every 4 hours** and at any point of time, only the latest 2 backups are stored. However, if the container or database is deleted, Azure Cosmos DB retains the existing snapshots of a given container or database for 30 days."
+"...snapshot of your backup is **stored in Azure Blob storage** in the same region as the current write region..."
+
+**Multi-master == multi-write**: (Single master == Single write region)
+
+Works both in `standard` and `autoscale`. Cannot have both multi-master AND multi-write. First **disable** automatic failover, then **enable** multi-write.
+ - CLI: `--enable-multiple-write-locations true`
+ - powershell: `Update-AzCosmosDBAccount -ResourceGroupName $resourceGroupName -Name $accountName -EnableMultipleWriteLocations:$enableMultiMaster`
 
 Everything is stored as ARS = Atomic Record Sequence.
 
