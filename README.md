@@ -91,6 +91,7 @@ Works both in `standard` and `autoscale`. Cannot have both multi-master AND mult
 
 Everything is stored as ARS = Atomic Record Sequence.
 
+**APIs/Models**:
 | API | Database | Containers | Items |
 |---|---|---|---|
 | SQL API | Database | Container | Document  |
@@ -99,11 +100,23 @@ Everything is stored as ARS = Atomic Record Sequence.
 | Table API |  | Table | Item |
 | Cassandra API | Keyspace | Table | Row |
 
+Apache **TinkerPop** is a graph language/API --> Gremlin API
+
+**Consistency levels**:
+ - Strong: Highest cost and latency; closest to SQL/Relational databases.
+ - Bounded staleness: Two options
+   - at most K-data: update 5 records at a time; more than 5 requires refreshing.
+   - at most T seconds: after T seconds/minutes, refresh needed for consistency.
+ - Session (**default/most used**): Client centric. Same session == consistent, writes in other sessions have consistent-prefix consistency.
+ - Consistent prefix: In order writes --> in order reads. No "out of order" reads. 
+ - Eventual: Best performance/lowest latency and cheapest cost. Not "in order" reads. Examples: tweets, blog reads.
+
 **Partition key**: Defined at provision time -- cannot be changed later
- - High cardinality (**WRITE** optimized, example: vehicalid + date; extreme cardinality bad for READ operations)
+ - High cardinality (**WRITE** optimized, example: vehicalid + date)
  - Evenly distribute requests (avoid data skewness)
  - Evenly distribute storage (20 GB max). That is, avoid **hot partition** problem.
  - For **READ** operations, find a partition key that is even and does not have high cardinality.
+ - If both READ and WRITE, then use extreme cardinality for best performance. 
 
 
 **Time To Live**: https://docs.microsoft.com/en-us/azure/cosmos-db/time-to-live
