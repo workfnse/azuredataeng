@@ -27,16 +27,18 @@ SAS is signed with RBAC-AD: https://docs.microsoft.com/en-gb/azure/storage/blobs
 Connection string is for Access Key/Shared Key -- full access.
 
 
-### Stream Analytics
+## Stream Analytics
 
 **Window functions**
- - Count only once: `Session`, `Tumbling`.
+ - Count only once: `Session`, `Sliding`.
  - Non-overlapping: `Tumbling`, `Session`.
  - Output only if event: `Session`, `Sliding`.
  - Fixed size: `Tumbling`, `Hopping`, `Sliding` - only Session has a variable window size.
 
 
-### Azure Data Lake Gen2
+
+
+## Azure Data Lake Gen2
 [Overview](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-introduction), 
 [Best Practices](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-best-practices), 
 [Summary - 3rd party](https://www.blue-granite.com/blog/10-things-to-know-about-azure-data-lake-storage-gen2)
@@ -56,7 +58,9 @@ Connection string is for Access Key/Shared Key -- full access.
  
  **Costs**: Storage cost the same as BLOB storage BUT **transaction** cost is higher.
 
-### Cosmos DB
+
+
+## Cosmos DB
 
 Two main problems with Cosmos DB: 
  - Expensive
@@ -100,7 +104,7 @@ Everything is stored as ARS = Atomic Record Sequence.
 
 
 
-### Synapse Analytics
+## Synapse Analytics
 
 [Best practices](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-best-practices), [Cheatsheet](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/cheat-sheet), [SQL Tables overview](https://docs.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-tables-overview)
 
@@ -154,7 +158,9 @@ More fine grained:
  - External Table (view only -- stays in memory, not on disk)
  - Table (physical disk) using `CTAS` = Create Table as Select.
 
-### Security
+
+
+## Security
 
 **Best practices**:
 
@@ -177,9 +183,10 @@ https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-access-co
 **BLOB**: https://docs.microsoft.com/en-us/azure/storage/blobs/security-recommendations
 
 **SQL/Synapse Analytics**
- - **Advanced Data Security**: Discovering, classifying, and labeling columns that contain sensitive data in your database. Sensitive Data dashboard.
-https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview
- - Auditing: enable database auditing.
+ - **Advanced Data Security**: [Data Discovery & Classification](https://docs.microsoft.com/en-us/azure/azure-sql/database/data-discovery-and-classification-overview), [Vulnerability Assessment](https://docs.microsoft.com/en-us/azure/azure-sql/database/sql-vulnerability-assessment), and [Advanced Threat Protection](https://docs.microsoft.com/en-us/azure/azure-sql/database/threat-detection-overview).
+   - Advanced Threat Detection: "detects anomalous activities indicating unusual and potentially harmful attempts to access or exploit your database."
+   - Vulnerability assesment: "easy-to-configure service that can discover, track, and help you remediate potential database vulnerabilities." 
+   - Discovering, classifying, and labeling columns that contain sensitive data in your database. Sensitive Data dashboard.
  - Master key (SQL) is required for column encryption/decryption tasks.
  - [Always Encrypted](https://docs.microsoft.com/en-us/sql/relational-databases/security/encryption/always-encrypted-database-engine?view=sql-server-2017) supports two types of encryption: randomized (more secure) and deterministic (querying/joins). It does **column-level** encryption.
  - [Row level security](https://docs.microsoft.com/en-us/sql/relational-databases/security/row-level-security?view=sql-server-2017) using predicates/functions for read-only access or other kinds. `CREATE SECURITY POLICY` (T-SQL) encrypts the WHOLE row; not useful where only one column like address has to be masked.
@@ -198,7 +205,9 @@ All newly created databases in SQL Database are encrypted by default by using se
 
 **Private peering/VNets/ExpressRoutes**: https://docs.microsoft.com/en-us/azure/storage/common/storage-private-endpoints
 
-### Monitoring
+
+
+## Monitoring
 
 **General**:
  - Push notifications send alerts to Azure **mobile** app.
