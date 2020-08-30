@@ -73,7 +73,12 @@ Repartition: https://docs.microsoft.com/en-us/azure/stream-analytics/repartition
  Keeping the smallest unit on the right end makes sure that the analytics engine/reading service only has to read a fraction of the data instead of reading entire folders.
  - Read-Write operations with `4MB-16MB` size.
  
- **Tiers**: Hot (frequent access, ex: daily), Cool (infrequent access, ex: monthly), Archive (rare access, ex: yearly)
+ [**Tiers**](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-supported-blob-storage-features): [**Lifecycle management**](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-lifecycle-management-concepts?tabs=azure-portal)
+  - Hot (cheap access, high storage cost; ex: daily; 99.9% availability in general, 99.99% for RA-GRS) 
+  - Cool (expensive access, low storage cost; ex: monthly), 
+  - Archive (most expensive access, cheapest storage cost; ex: yearly) "While a blob is in archive storage, the **blob data is offline and can't be read, overwritten, or modified**. To read or download a blob in archive, you must first rehydrate it to an online tier. You can't take snapshots of a blob in archive storage." [Rehydration](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-rehydration?tabs=azure-portal) to an online tier can take from 1 hour (premium) to 15 hours (standard). Rehydration can also be used to **copy data** to a hot or cool archive blob.
+  
+Only the hot and cool access tiers can be set at the **account** level. The archive access tier isn't available at the account level. Use lifecycle management to set blob level tiering.
  
  **Costs**: Storage cost the same as BLOB storage BUT **transaction** cost is higher.
 
