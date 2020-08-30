@@ -85,8 +85,9 @@ Two main problems with Cosmos DB:
  - Expensive
  - Can handle mostly **simple queries**
 
-**Backup**: "Azure Cosmos DB automatically takes a backup of your **database every 4 hours** and at any point of time, only the latest 2 backups are stored. However, if the container or database is deleted, Azure Cosmos DB retains the existing snapshots of a given container or database for 30 days."
+[**Backup**](https://docs.microsoft.com/en-us/azure/cosmos-db/online-backup-and-restore): "Azure Cosmos DB automatically takes a backup of your **database every 4 hours** and at any point of time, only the latest 2 backups are stored. However, if the container or database is deleted, Azure Cosmos DB retains the existing snapshots of a given container or database for 30 days."
 "...snapshot of your backup is **stored in Azure Blob storage** in the same region as the current write region..."
+"Because the container is live, the backup is still running, so if you wait beyond the retention period (the **default is eight hours**) the backups would be overwritten. In order to prevent the backup from being overwritten, increase the backup retention for your account to at least seven days. "
 
 **Multi-master == multi-write**: (Single master == Single write region)
 
