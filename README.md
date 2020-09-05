@@ -62,7 +62,8 @@ Repartition: https://docs.microsoft.com/en-us/azure/stream-analytics/repartition
 [Best Practices](https://docs.microsoft.com/en-us/azure/storage/blobs/data-lake-storage-best-practices), 
 [Summary - 3rd party](https://www.blue-granite.com/blog/10-things-to-know-about-azure-data-lake-storage-gen2)
  - Multi-modal (file system, BLOB)
- - Increased granularity for security (POSIX/Access Control List), data engineering and science (databricks).
+ - Increased granularity for security (POSIX/Access Control List); support for data engineering and science (databricks).
+ - POSIX: `read=4`, `write=2`, `execute=1 (not for files)`. POSIX permissions cannot be inherited. ACLs only apply to **new** files.
  - Renaming/delete operations much faster as opposed to wasb-BLOB.
  - `abfs[s]://[container].dfs.core.windows.net/` (ADLS Gen2) vs `wasb[s]://[container].blob.core.windows.net/` (BLOB storage)
  - Container -> Directory -> File as opposed to BLOB storage: Container -> Virtual Directory -> blob.
@@ -92,7 +93,7 @@ Two main problems with Cosmos DB:
 
 [**Backup**](https://docs.microsoft.com/en-us/azure/cosmos-db/online-backup-and-restore): "Azure Cosmos DB automatically takes a backup of your **database every 4 hours** and at any point of time, only the latest 2 backups are stored. However, if the container or database is deleted, Azure Cosmos DB retains the existing snapshots of a given container or database for 30 days."
 "...snapshot of your backup is **stored in Azure Blob storage** in the same region as the current write region..."
-"Because the container is live, the backup is still running, so if you wait beyond the retention period (the **default is eight hours**) the backups would be overwritten. In order to prevent the backup from being overwritten, increase the backup retention for your account to at least seven days. "
+"Because the container is live, the backup is still running, so if you wait beyond the retention period (the **default is 8 hours**) the backups would be overwritten. In order to prevent the backup from being overwritten, increase the backup retention for your account to at least seven days. "
 
 **Multi-master == multi-write**: (Single master == Single write region)
 
