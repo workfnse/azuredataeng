@@ -97,7 +97,7 @@ Two main problems with Cosmos DB:
 
 **Multi-master == multi-write**: (Single master == Single write region)
 
-Works both in `standard` and `autoscale`. Cannot have both multi-master AND multi-write. First **disable** automatic failover, then **enable** multi-write.
+Works both in `standard` and `autoscale`. Cannot have both automatic failover AND multi-write (multi-master). First **disable** automatic failover, then **enable** multi-write.
  - CLI: `--enable-multiple-write-locations true`
  - powershell: `Update-AzCosmosDBAccount -ResourceGroupName $resourceGroupName -Name $accountName -EnableMultipleWriteLocations:$enableMultiMaster`
 
