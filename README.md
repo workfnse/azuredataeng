@@ -83,6 +83,37 @@ Only the hot and cool access tiers can be set at the **account** level. The arch
  
  **Costs**: Storage cost the same as BLOB storage BUT **transaction** cost is higher.
 
+**Shared Access Signatures**
+
+3 types:
+ - User delegation (using Active Directory): Superior security using user delegation key generated using Azure Active Directory; only works for Blob storage.
+ - Service SAS (using Account/Shared Key): A service SAS delegates access to a resource in only one of the Azure Storage services: Blob storage, Queue storage, Table storage, or Azure Files.
+ - Account SAS (using Account/Shared Key): Full access. 
+
+2 forms:
+ - Ad-hoc: start time, expiry time, and permissions for the SAS are all specified in the SAS URI (applies to all three types: user delegation, service, account).
+ - Stored access (only applies to Service SAS): A stored access policy is defined on a resource container, which can be a blob container, table, queue, or file share.
+https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview
+
+Built-in roles such as Owner, Contributor, and Storage Account Contributor permit a security principal to manage a storage account, but do not provide access to the blob or queue data within that account via Azure AD. However, if a role includes the Microsoft.Storage/storageAccounts/listKeys/action, then a user to whom that role is assigned can access data in the storage account via Shared Key authorization with the account access keys.
+https://docs.microsoft.com/en-us/azure/storage/common/storage-auth-aad#assign-azure-roles-for-access-rights
+
+Summary, as I understand:
+
+Azure AD can be used to grant roles as Owner, Contributor (no POSIX modification but read/write), etc BUT data can only be read if the user/app has access to the the ACCOUNT KEY: the user/app will use this account key to access data.
+
+https://docs.microsoft.com/en-us/azure/storage/common/storage-auth
+
+CLI:
+az ad sp create-for-rbac \
+    --name <service-principal> \
+    --role "Storage Blob Data Reader" \
+    --scopes /subscriptions/<subscription>/resourceGroups/<resource-group>/providers/Microsoft.Storage/storageAccounts/<storage-account>
+
+https://docs.microsoft.com/en-us/azure/storage/common/storage-auth-aad-msi
+
+
+
 
 
 ## Cosmos DB
