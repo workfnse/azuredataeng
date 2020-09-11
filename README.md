@@ -4,7 +4,7 @@ DP-200
 DP-201
 
 **File formats** common in the cloud: 
- - `Avro` stores data in a row-based format. (HADOOP)
+ - `Avro` stores data in a row-based *binary* format. (HADOOP)
  - `Parquet` and `ORC` formats store data in a columnar format. (HADOOP)
 
 Parquet, ORC, JSON, Delimited Text, Hive ORC, Hive RCFile are supported by CREATE EXTERNAL TABLE (used in polybase transfer).
