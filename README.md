@@ -195,6 +195,20 @@ Kinds of tables: Clustered index, Clustered columnstore (default), Heap
  - By default, SQL pool stores a table as a clustered columnstore index. This form of data storage achieves high data compression and query performance on large tables.
  - A heap table can be especially useful for loading transient data, such as a staging table which is transformed into a final table.
 
+**Clustered vs Non-clustered index**
+ - With a clustered index the rows are stored physically on the disk in the same order as the index. Therefore, there can be only one clustered index.
+ - With a non clustered index there is a second list that has pointers to the physical rows. You can have many non clustered indices, although each new index will increase the time it takes to write new records.
+
+> It is generally faster to read from a clustered index if you want to get back all the columns. You do not have to go first to the index and then to the table.
+Writing to a table with a clustered index can be slower, if there is a need to rearrange the data.
+https://stackoverflow.com/questions/16552475/is-a-clustered-index-faster-than-a-non-clustered-index-with-includes
+
+ - Non-clustered index on columns should be used for joins. [source](https://www.guru99.com/clustered-vs-non-clustered-index.html#:~:text=Cluster%20index%20is%20a%20type%20of%20index%20that%20sorts%20the,and%20indices%20at%20another%20location)
+
+> For example, when you create a table with a UNIQUE constraint, Database Engine automatically creates a nonclustered index. If you configure a PRIMARY KEY, Database Engine automatically creates a clustered index, unless a clustered index already exists. When you try to enforce a PRIMARY KEY constraint on an existing table and a clustered index already exists on that table, SQL Server enforces the primary key using a nonclustered index.
+
+Source: [Microsoft docs](https://docs.microsoft.com/en-us/sql/relational-databases/indexes/clustered-and-nonclustered-indexes-described?view=sql-server-ver15)
+
 **Distributions**
  - Replicated: <2 GB, usually dimension tables
  - Hash: 
